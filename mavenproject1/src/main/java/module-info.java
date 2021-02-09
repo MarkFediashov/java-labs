@@ -1,0 +1,6 @@
+module com.team.mavenproject1 {
+    requires javafx.controls;
+    requires java.desktop;
+    requires java.logging;
+    exports com.team.mavenproject1;
+}

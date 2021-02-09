@@ -1,0 +1,34 @@
+package com.team.mavenproject1;
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author User
+ */
+public class Integral<T extends Function> {
+    private final T function;
+    
+    Integral(T function){
+        this.function = function;
+    }
+    
+    public double integrateInBounds(double left, double rigth, double dx){
+        double sum = 0.0;
+        
+        while(left < rigth){
+            left += dx;
+            sum += function.compute(left)*dx;
+        }
+        
+        return sum;
+    }
+    
+    public T getFunction(){
+        return function;
+    }
+}
