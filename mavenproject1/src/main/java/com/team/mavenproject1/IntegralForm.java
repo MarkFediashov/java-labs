@@ -5,10 +5,17 @@ import com.team.mavenproject1.dto.IntegralComputationDto;
 import com.team.mavenproject1.exception.ArgumentTooLargeException;
 import com.team.mavenproject1.exception.RegExpTestFailedException;
 import com.team.mavenproject1.exception.ValidatorException;
+import com.team.mavenproject1.services.IntegralComputationDtoSerializator;
+import com.team.mavenproject1.services.IntegralComputationDtoSerializatorBinaryImpl;
+import com.team.mavenproject1.services.IntegralComputationDtoSerializatorJsonImpl;
 import com.team.mavenproject1.validator.ValueValidator;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+import java.util.function.Consumer;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -31,10 +38,16 @@ public class IntegralForm extends javax.swing.JFrame {
     private final static int RECORDS_AMOUNT = 10;
     private int collectionStartSince = -1;
     
+    private IntegralComputationDtoSerializator json;
+    private IntegralComputationDtoSerializator bin;
+    
     public IntegralForm() {
         integral = new Integral<>((x)->1/x);
         initComponents();
         fillComputations();
+        
+        bin = new IntegralComputationDtoSerializatorBinaryImpl();
+        json = new IntegralComputationDtoSerializatorJsonImpl();
     }
     
     private void fillComputations(){
@@ -73,6 +86,8 @@ public class IntegralForm extends javax.swing.JFrame {
         stepField = new java.awt.TextField();
         removeCollectionRowsButton = new javax.swing.JButton();
         fillFromCollectionButton = new javax.swing.JButton();
+        binSaveButton = new javax.swing.JButton();
+        fetchBinButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -143,6 +158,20 @@ public class IntegralForm extends javax.swing.JFrame {
             }
         });
 
+        binSaveButton.setText("Save as bin");
+        binSaveButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                binSaveButtonMouseClicked(evt);
+            }
+        });
+
+        fetchBinButton.setText("Fetch from bin");
+        fetchBinButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fetchBinButtonMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -150,19 +179,27 @@ public class IntegralForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(268, 268, 268)
-                        .addComponent(computeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(181, 181, 181)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(stepField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(rigthBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(leftBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(removeCollectionRowsButton)
-                    .addComponent(fillFromCollectionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(54, 54, 54)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(268, 268, 268)
+                                .addComponent(computeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(181, 181, 181)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(stepField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(rigthBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(leftBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(removeCollectionRowsButton)
+                            .addComponent(fillFromCollectionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(54, 54, 54))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(binSaveButton)
+                        .addGap(38, 38, 38)
+                        .addComponent(fetchBinButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(addRowButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,7 +227,10 @@ public class IntegralForm extends javax.swing.JFrame {
                         .addComponent(removeSelectedRow)
                         .addGap(27, 27, 27))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(addRowButton)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(addRowButton)
+                            .addComponent(binSaveButton)
+                            .addComponent(fetchBinButton))
                         .addGap(36, 36, 36))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(207, 207, 207)
@@ -265,20 +305,51 @@ public class IntegralForm extends javax.swing.JFrame {
       
     }//GEN-LAST:event_removeSelectedRowMouseClicked
 
+    private String getRepositoryFile(){
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        
+        int result = chooser.showOpenDialog(this);
+        
+        return result == JFileChooser.APPROVE_OPTION ? chooser.getSelectedFile().getAbsolutePath() : null;
+    }
+    
+    private List<IntegralComputationDto> getTableAsList() {
+        Vector<Vector> vector = getDefaultTableModel().getDataVector();
+        List<IntegralComputationDto> list = new ArrayList<>();
+        
+        try{
+        for(Vector v : vector){
+            list.add(new IntegralComputationDto(
+                    ValueValidator.validateAndParse((String)v.get(0)),
+                    ValueValidator.validateAndParse((String)v.get(1)), 
+                    ValueValidator.validateAndParse((String)v.get(2)), 
+                    (Double)v.get(3)
+            ));
+        }}
+        catch (ValidatorException e){
+            return null;
+        }
+        return list;
+    }
+    
     private void fillFromCollectionButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fillFromCollectionButtonMouseClicked
         if(collectionStartSince == -1){
-            List<IntegralComputationDto> list = IntegralComputationProvider.of(this).getComputationList();
-            DefaultTableModel model = getDefaultTableModel();
-        
             collectionStartSince = resultTable.getRowCount();
-        
-            for(IntegralComputationDto dto : list){
-                model.addRow(dto.asRow());
-            }
+            List<IntegralComputationDto> list = IntegralComputationProvider.of(this).getComputationList();
+            setListAsTable(list);
         }
         
     }//GEN-LAST:event_fillFromCollectionButtonMouseClicked
 
+    private void setListAsTable(List<IntegralComputationDto> list){
+        DefaultTableModel model = getDefaultTableModel();
+        
+        for(IntegralComputationDto dto : list){
+            model.addRow(dto.asRow());
+        }
+    }
+    
     private void removeCollectionRowsButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeCollectionRowsButtonMouseClicked
         if(collectionStartSince!=-1){
             
@@ -293,6 +364,27 @@ public class IntegralForm extends javax.swing.JFrame {
         }
        
     }//GEN-LAST:event_removeCollectionRowsButtonMouseClicked
+
+    private void fileAction(Consumer<String> whenFileSelected){
+        String filename = getRepositoryFile();
+        
+        if(filename != null){
+            whenFileSelected.accept(filename);
+        }
+    }
+    
+    private void binSaveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_binSaveButtonMouseClicked
+        
+        fileAction((filename) -> IntegralComputationProvider.of(this).getRepositiry().saveAll(filename, getTableAsList(), bin));
+        
+    }//GEN-LAST:event_binSaveButtonMouseClicked
+
+    private void fetchBinButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fetchBinButtonMouseClicked
+        fileAction((filename) -> {
+            var list = IntegralComputationProvider.of(this).getRepositiry().fetchAll(filename, bin);
+            setListAsTable(list);
+        });
+    }//GEN-LAST:event_fetchBinButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -331,7 +423,9 @@ public class IntegralForm extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addRowButton;
+    private javax.swing.JButton binSaveButton;
     private javax.swing.JButton computeButton;
+    private javax.swing.JButton fetchBinButton;
     private javax.swing.JButton fillFromCollectionButton;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.TextField leftBoundField;

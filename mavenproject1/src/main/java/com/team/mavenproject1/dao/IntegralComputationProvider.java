@@ -21,7 +21,8 @@ public class IntegralComputationProvider {
     private final static Map<JFrame, IntegralComputationProvider> providers = new HashMap<>();
     
     private IntegralComputationProvider(){
-        computationList = new LinkedList<>();
+        computationTemplateList = new LinkedList<>();
+        integralComputationRepository = new IntegralComputationRepositoryImpl();
     }
     
     public static IntegralComputationProvider of(JFrame form){
@@ -34,9 +35,14 @@ public class IntegralComputationProvider {
         return resolvedProvider;
     }
     
-    private final List<IntegralComputationDto> computationList;
+    private final List<IntegralComputationDto> computationTemplateList;
+    private final IntegralComputationRepository integralComputationRepository;
+    
+    public IntegralComputationRepository getRepositiry(){
+        return integralComputationRepository;
+    }
     
     public List<IntegralComputationDto> getComputationList() {
-        return computationList;
+        return computationTemplateList;
     }
 }
