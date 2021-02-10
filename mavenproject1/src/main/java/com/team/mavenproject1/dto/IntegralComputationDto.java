@@ -58,6 +58,11 @@ public class IntegralComputationDto {
     }
     
     public Object[] asRow() {
-        return new Object[]{left, rigth, dx, result};
+        return new Object[]{
+            Double.toString(left), 
+            Double.toString(rigth), 
+            Double.toString(dx), 
+            result
+        };
     }
 }

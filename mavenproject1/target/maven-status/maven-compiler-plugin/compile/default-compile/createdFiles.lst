@@ -1,6 +1,9 @@
+com\team\mavenproject1\exception\ValidatorException.class
 com\team\mavenproject1\IntegralForm$7.class
+com\team\mavenproject1\validator\ValueValidator.class
 com\team\mavenproject1\IntegralForm.class
 com\team\mavenproject1\SystemInfo.class
+com\team\mavenproject1\exception\RegExpTestFailedException.class
 com\team\mavenproject1\Integral.class
 com\team\mavenproject1\IntegralForm$1.class
 com\team\mavenproject1\IntegralForm$3.class
@@ -13,4 +16,6 @@ com\team\mavenproject1\IntegralForm$4.class
 com\team\mavenproject1\Function.class
 com\team\mavenproject1\IntegralForm$5.class
 module-info.class
+com\team\mavenproject1\exception\ArgumentTooLargeException.class
 com\team\mavenproject1\dto\IntegralComputationDto.class
+com\team\mavenproject1\validator\ValueValidator$Bounds.class
