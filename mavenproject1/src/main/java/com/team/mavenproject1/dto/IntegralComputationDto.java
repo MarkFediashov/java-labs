@@ -5,11 +5,13 @@
  */
 package com.team.mavenproject1.dto;
 
+import java.io.Serializable;
+
 /**
  *
  * @author User
  */
-public class IntegralComputationDto {
+public class IntegralComputationDto implements Serializable{
     
     private double left;
     private double rigth;
