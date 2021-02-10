@@ -1,5 +1,7 @@
 package com.team.mavenproject1;
 
+import com.team.mavenproject1.dto.IntegralComputationDto;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -26,6 +28,10 @@ public class Integral<T extends Function> {
         }
         
         return sum;
+    }
+    
+    public void computeIntegralDto(IntegralComputationDto dto){
+        dto.setResult(integrateInBounds(dto.getLeft(), dto.getRigth(), dto.getDx()));
     }
     
     public T getFunction(){
