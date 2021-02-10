@@ -1,9 +1,10 @@
 package com.team.mavenproject1;
 
-import java.util.ArrayList;
+import com.team.mavenproject1.dao.IntegralComputationProvider;
+import com.team.mavenproject1.dto.IntegralComputationDto;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -22,10 +23,30 @@ public class IntegralForm extends javax.swing.JFrame {
      * Creates new form IntegralForm
      */
     final Integral<Function> integral;
+    private final static int RECORDS_AMOUNT = 10;
+    private int collectionStartSince = -1;
     
     public IntegralForm() {
         integral = new Integral<>((x)->1/x);                                                
         initComponents();
+        fillComputations();
+    }
+    
+    private void fillComputations(){
+        IntegralComputationProvider provider = IntegralComputationProvider.of(this);
+        List<IntegralComputationDto> tableRows = provider.getComputationList();
+        
+        Random rand = new Random();
+        
+        for(int i = 0; i < RECORDS_AMOUNT; i++){
+            IntegralComputationDto temp = new IntegralComputationDto();
+            temp.setLeft(rand.nextDouble() * 10);
+            temp.setRigth(rand.nextDouble() * 100);
+            temp.setDx(rand.nextDouble());
+            
+            integral.computeIntegralDto(temp);
+            tableRows.add(temp);
+        }
     }
 
     /**
@@ -39,12 +60,14 @@ public class IntegralForm extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         resultTable = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        addRowButton = new javax.swing.JButton();
         computeButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        removeSelectedRow = new javax.swing.JButton();
         leftBoundField = new java.awt.TextField();
         rigthBoundField = new java.awt.TextField();
         stepField = new java.awt.TextField();
+        removeCollectionRowsButton = new javax.swing.JButton();
+        fillFromCollectionButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -74,15 +97,10 @@ public class IntegralForm extends javax.swing.JFrame {
         resultTable.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(resultTable);
 
-        jButton1.setText("Add");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        addRowButton.setText("Add");
+        addRowButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                addRowButtonMouseClicked(evt);
             }
         });
 
@@ -92,21 +110,11 @@ public class IntegralForm extends javax.swing.JFrame {
                 computeButtonMouseClicked(evt);
             }
         });
-        computeButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                computeButtonActionPerformed(evt);
-            }
-        });
 
-        jButton3.setText("Remove");
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+        removeSelectedRow.setText("Remove");
+        removeSelectedRow.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
-            }
-        });
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                removeSelectedRowMouseClicked(evt);
             }
         });
 
@@ -115,6 +123,20 @@ public class IntegralForm extends javax.swing.JFrame {
         rigthBoundField.setText("20");
 
         stepField.setText("0.1");
+
+        removeCollectionRowsButton.setText("Remove collection rows");
+        removeCollectionRowsButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeCollectionRowsButtonMouseClicked(evt);
+            }
+        });
+
+        fillFromCollectionButton.setText("Fill from collection");
+        fillFromCollectionButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fillFromCollectionButtonMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -129,29 +151,43 @@ public class IntegralForm extends javax.swing.JFrame {
                         .addGap(181, 181, 181)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(stepField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(leftBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(rigthBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 232, Short.MAX_VALUE)
+                            .addComponent(rigthBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(leftBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(removeCollectionRowsButton)
+                    .addComponent(fillFromCollectionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(54, 54, 54)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addRowButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(645, 645, 645)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(removeSelectedRow, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1))
                 .addGap(42, 42, 42))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 672, Short.MAX_VALUE)
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(235, 235, 235)
+                        .addComponent(fillFromCollectionButton)
+                        .addGap(42, 42, 42)
+                        .addComponent(removeCollectionRowsButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton3)
+                        .addComponent(removeSelectedRow)
                         .addGap(27, 27, 27))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton1)
+                        .addComponent(addRowButton)
                         .addGap(36, 36, 36))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(207, 207, 207)
@@ -165,20 +201,10 @@ public class IntegralForm extends javax.swing.JFrame {
                 .addGap(235, 235, 235))
         );
 
+        removeCollectionRowsButton.getAccessibleContext().setAccessibleName("removeCollectionButton");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-      
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void computeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_computeButtonActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void computeButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_computeButtonMouseClicked
         int selectedRow = resultTable.getSelectedRow();
@@ -214,19 +240,52 @@ public class IntegralForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_computeButtonMouseClicked
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        DefaultTableModel model = (DefaultTableModel)resultTable.getModel();
+    private DefaultTableModel getDefaultTableModel (){
+        return (DefaultTableModel)resultTable.getModel();
+    }
+    
+    private void addRowButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addRowButtonMouseClicked
+        DefaultTableModel model = getDefaultTableModel();
         model.addRow(new Object[]{0.0,0.0,0.0,0.0});
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_addRowButtonMouseClicked
 
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+    private void removeSelectedRowMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeSelectedRowMouseClicked
         int selectedRow = resultTable.getSelectedRow();
-        DefaultTableModel model = (DefaultTableModel)resultTable.getModel();
+        DefaultTableModel model = getDefaultTableModel();
         if(selectedRow >= 0){
             model.removeRow(selectedRow);
         }
       
-    }//GEN-LAST:event_jButton3MouseClicked
+    }//GEN-LAST:event_removeSelectedRowMouseClicked
+
+    private void fillFromCollectionButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fillFromCollectionButtonMouseClicked
+        if(collectionStartSince == -1){
+            List<IntegralComputationDto> list = IntegralComputationProvider.of(this).getComputationList();
+            DefaultTableModel model = getDefaultTableModel();
+        
+            collectionStartSince = resultTable.getRowCount();
+        
+            for(IntegralComputationDto dto : list){
+                model.addRow(dto.asRow());
+            }
+        }
+        
+    }//GEN-LAST:event_fillFromCollectionButtonMouseClicked
+
+    private void removeCollectionRowsButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeCollectionRowsButtonMouseClicked
+        if(collectionStartSince!=-1){
+            
+            
+            DefaultTableModel model = getDefaultTableModel();
+            int counter = RECORDS_AMOUNT;
+            while(counter-- > 0){
+                model.removeRow(collectionStartSince);
+            }
+            
+            collectionStartSince = -1;
+        }
+       
+    }//GEN-LAST:event_removeCollectionRowsButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -264,11 +323,13 @@ public class IntegralForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addRowButton;
     private javax.swing.JButton computeButton;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton fillFromCollectionButton;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.TextField leftBoundField;
+    private javax.swing.JButton removeCollectionRowsButton;
+    private javax.swing.JButton removeSelectedRow;
     private javax.swing.JTable resultTable;
     private java.awt.TextField rigthBoundField;
     private java.awt.TextField stepField;
