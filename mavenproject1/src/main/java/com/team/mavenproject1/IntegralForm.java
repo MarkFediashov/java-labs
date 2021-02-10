@@ -2,9 +2,14 @@ package com.team.mavenproject1;
 
 import com.team.mavenproject1.dao.IntegralComputationProvider;
 import com.team.mavenproject1.dto.IntegralComputationDto;
+import com.team.mavenproject1.exception.ArgumentTooLargeException;
+import com.team.mavenproject1.exception.RegExpTestFailedException;
+import com.team.mavenproject1.exception.ValidatorException;
+import com.team.mavenproject1.validator.ValueValidator;
 import java.util.List;
 import java.util.Random;
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /*
@@ -27,7 +32,7 @@ public class IntegralForm extends javax.swing.JFrame {
     private int collectionStartSince = -1;
     
     public IntegralForm() {
-        integral = new Integral<>((x)->1/x);                                                
+        integral = new Integral<>((x)->1/x);
         initComponents();
         fillComputations();
     }
@@ -80,7 +85,7 @@ public class IntegralForm extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Double.class, java.lang.Double.class, java.lang.Double.class, java.lang.Double.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class
             };
             boolean[] canEdit = new boolean [] {
                 true, true, true, false
@@ -152,9 +157,7 @@ public class IntegralForm extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(stepField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(rigthBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(leftBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))))
+                            .addComponent(leftBoundField, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(removeCollectionRowsButton)
@@ -212,29 +215,33 @@ public class IntegralForm extends javax.swing.JFrame {
         double left, rigth, dx;
         
         Vector<Object> row = null;
-        
-        if(selectedRow != -1){
-            row = ((DefaultTableModel) resultTable.getModel()).getDataVector().elementAt(selectedRow);
+        try{
+
+            if(selectedRow != -1){
+                row = ((DefaultTableModel) resultTable.getModel()).getDataVector().elementAt(selectedRow);
             
-            left = (Double)row.get(0);
-            rigth = (Double)row.get(1);
-            dx = (Double)row.get(2);
+                left = ValueValidator.validateAndParse((String)row.get(0));
+                rigth =  ValueValidator.validateAndParse((String)row.get(1));
+                dx =  ValueValidator.validateAndParse((String)row.get(2));
             
-        } else {
-            left = Double.parseDouble(leftBoundField.getText());                        
-            rigth = Double.parseDouble(rigthBoundField.getText());
-            dx = Double.parseDouble(stepField.getText());
+            } else {
+                left = ValueValidator.validateAndParse(leftBoundField.getText());                         // мой говнокод
+                rigth = ValueValidator.validateAndParse(rigthBoundField.getText());
+                dx = ValueValidator.validateAndParse(stepField.getText());
+            }
+        } catch (ValidatorException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            return;
         }
-        
         double result = integral.integrateInBounds(left, rigth, dx);
         
         if(row!=null){
             row.insertElementAt(result, 3);
         }
         else {
-            Double[] arr = {left, rigth, dx, result};
+            IntegralComputationDto dto = new IntegralComputationDto(left, rigth, dx, result);
             DefaultTableModel model = (DefaultTableModel)resultTable.getModel();
-            model.addRow(arr);
+            model.addRow(dto.asRow());
         }
         
         
