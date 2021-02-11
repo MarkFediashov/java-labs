@@ -6,36 +6,28 @@
 package com.team.mavenproject1.services;
 
 import com.team.mavenproject1.dto.IntegralComputationDto;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class IntegralComputationDtoSerializatorBinaryImpl implements IntegralComputationDtoSerializator {
+final class IntegralComputationDtoSerializatorBinaryImpl extends BaseAbstractSerializator {
 
     @Override
-    public void saveInFile(String filename, List<IntegralComputationDto> dto) {
-        try{
-            ObjectOutputStream outStream = new ObjectOutputStream(new FileOutputStream(filename));
-            outStream.writeObject(dto);
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        } 
+    protected void saveDto(FileOutputStream file, List<IntegralComputationDto> dto) throws Exception {
+        ObjectOutputStream outStream = new ObjectOutputStream(file);
+        outStream.writeObject(dto);
+        outStream.close();
     }
 
     @Override
-    public List<IntegralComputationDto> fetchFromFile(String filename) {
-        try{
-            ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(filename));
-            return (List<IntegralComputationDto>)inStream.readObject();
-        } catch (Exception e) {}
-        return new ArrayList<>();
+    protected List<IntegralComputationDto> fetchDto(FileInputStream file) throws Exception {
+        ObjectInputStream inStream = new ObjectInputStream(file);
+        var result = (List<IntegralComputationDto>)inStream.readObject();
+        inStream.close();
+        return result;
     }
     
 }
