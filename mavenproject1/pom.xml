@@ -99,7 +99,7 @@
         <repository>
             <id>repos-id-1</id>
             <name>Repos for openfx Nastya jdk8</name>
-            <url>https://mvnrepository.com/</url>
+            <url>https://mvnrepository.com</url>
         </repository>
     </repositories>
 </project>
