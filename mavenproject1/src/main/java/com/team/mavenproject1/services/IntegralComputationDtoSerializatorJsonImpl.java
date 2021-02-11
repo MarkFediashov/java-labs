@@ -6,20 +6,26 @@
 package com.team.mavenproject1.services;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.team.mavenproject1.dto.IntegralComputationDto;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
-public class IntegralComputationDtoSerializatorJsonImpl implements IntegralComputationDtoSerializator {
+final class IntegralComputationDtoSerializatorJsonImpl extends BaseAbstractSerializator {
+    
+    final ObjectMapper mapper = new ObjectMapper();;
 
     @Override
-    public void saveInFile(String filename, List<IntegralComputationDto> dto) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected void saveDto(FileOutputStream file, List<IntegralComputationDto> dto) throws Exception {
+        mapper.writeValue(file, dto);
     }
 
     @Override
-    public List<IntegralComputationDto> fetchFromFile(String filename) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected List<IntegralComputationDto> fetchDto(FileInputStream file) throws Exception {
+        return mapper.readValue(file, new TypeReference<List<IntegralComputationDto>>() {});
     }
     
 }

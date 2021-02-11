@@ -16,19 +16,19 @@ import javax.swing.JFrame;
  *
  * @author User
  */
-public class IntegralComputationProvider {
+public class DataProvider {
     
-    private final static Map<JFrame, IntegralComputationProvider> providers = new HashMap<>();
+    private final static Map<JFrame, DataProvider> providers = new HashMap<>();
     
-    private IntegralComputationProvider(){
+    private DataProvider(){
         computationTemplateList = new LinkedList<>();
         integralComputationRepository = new IntegralComputationRepositoryImpl();
     }
     
-    public static IntegralComputationProvider of(JFrame form){
-        IntegralComputationProvider resolvedProvider = providers.get(form);
+    public static DataProvider of(JFrame form){
+        DataProvider resolvedProvider = providers.get(form);
         if(resolvedProvider==null){
-            resolvedProvider = new IntegralComputationProvider();
+            resolvedProvider = new DataProvider();
             providers.put(form, resolvedProvider);
         }
         
