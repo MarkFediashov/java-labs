@@ -11,9 +11,11 @@ com\team\mavenproject1\services\Serializator.class
 com\team\mavenproject1\IntegralForm$9.class
 com\team\mavenproject1\IntegralForm$10.class
 com\team\mavenproject1\dto\IntegralComputationDto.class
+com\team\mavenproject1\ThreadSummator.class
 com\team\mavenproject1\validator\ValueValidator$Bounds.class
 com\team\mavenproject1\dao\DataProvider.class
 com\team\mavenproject1\exception\ValidatorException.class
+com\team\mavenproject1\ParallelIntegralExtension.class
 com\team\mavenproject1\IntegralForm.class
 com\team\mavenproject1\IntegralForm$8.class
 com\team\mavenproject1\Integral.class
