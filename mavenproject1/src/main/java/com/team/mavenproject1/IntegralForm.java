@@ -31,31 +31,32 @@ public class IntegralForm extends javax.swing.JFrame {
     /**
      * Creates new form IntegralForm
      */
-    final Integral<Function> integral;
+    final ParallelIntegralExtension<Function> integral;
     private final static int RECORDS_AMOUNT = 10;
     private int collectionStartSince = -1;
     
     
     public IntegralForm() {
-        integral = new Integral<>((x)->1/x);
+        integral = new ParallelIntegralExtension(new Integral<>((x)->1/x, 12);                                                //частично мой говнокод (ненужный)
         initComponents();
-        fillComputations();
+        //fillComputations();
         
     }
     
     private void fillComputations(){
         DataProvider provider = DataProvider.of(this);
-        List<IntegralComputationDto> tableRows = provider.getComputationList();
+        final List<IntegralComputationDto> tableRows = provider.getComputationList();
         
         Random rand = new Random();
         
         for(int i = 0; i < RECORDS_AMOUNT; i++){
-            IntegralComputationDto temp = new IntegralComputationDto();
+            final IntegralComputationDto temp = new IntegralComputationDto();
             temp.setLeft(rand.nextDouble() * 10);
             temp.setRigth(rand.nextDouble() * 100);
             temp.setDx(rand.nextDouble());
             
-            integral.computeIntegralDto(temp);
+            integral.setCallback((res) -> tableRows.add(temp));
+            integral.startCompute(temp);
             tableRows.add(temp);
         }
     }
@@ -272,12 +273,11 @@ public class IntegralForm extends javax.swing.JFrame {
         
         double left, rigth, dx;
         
-        Vector<Object> row = null;
+        Vector<Object> row = selectedRow >= 0 ? ((DefaultTableModel) resultTable.getModel()).getDataVector().elementAt(selectedRow) : null;
         try{
-
+        
             if(selectedRow != -1){
-                row = ((DefaultTableModel) resultTable.getModel()).getDataVector().elementAt(selectedRow);
-            
+
                 left = ValueValidator.validateAndParse((String)row.get(0));
                 rigth =  ValueValidator.validateAndParse((String)row.get(1));
                 dx =  ValueValidator.validateAndParse((String)row.get(2));
@@ -290,19 +290,18 @@ public class IntegralForm extends javax.swing.JFrame {
         } catch (ValidatorException e){
             JOptionPane.showMessageDialog(null, e.getMessage());
             return;
-        }
-        double result = integral.integrateInBounds(left, rigth, dx);
-        
-        if(row!=null){
+        } 
+        integral.setCallback((result) -> {if(selectedRow!=-1){
             row.insertElementAt(result, 3);
         }
         else {
             IntegralComputationDto dto = new IntegralComputationDto(left, rigth, dx, result);
             DefaultTableModel model = (DefaultTableModel)resultTable.getModel();
             model.addRow(dto.asRow());
-        }
+        }});
         
-        
+        integral.startCompute(new IntegralComputationDto(left, rigth, dx, 0.0));
+
     }//GEN-LAST:event_computeButtonMouseClicked
 
     private DefaultTableModel getDefaultTableModel (){
