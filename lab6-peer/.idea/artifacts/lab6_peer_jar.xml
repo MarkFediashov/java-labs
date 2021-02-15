@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="lab6-peer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/lab6_peer_jar</output-path>
+    <root id="archive" name="lab6-peer.jar">
+      <element id="module-output" name="lab6-peer" />
+    </root>
+  </artifact>
+</component>
