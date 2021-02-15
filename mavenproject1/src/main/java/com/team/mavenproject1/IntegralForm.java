@@ -7,6 +7,7 @@ import com.team.mavenproject1.services.IntegralComputationDtoSerializator;
 import com.team.mavenproject1.services.Serializator;
 import com.team.mavenproject1.validator.ValueValidator;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -36,8 +37,8 @@ public class IntegralForm extends javax.swing.JFrame {
     private int collectionStartSince = -1;
     
     
-    public IntegralForm() {
-        integral = new ParallelIntegralExtension(new Integral<>((x)->x+2), 12);                                                //частично мой говнокод (ненужный)
+    public IntegralForm() throws IOException {
+        integral = new SocketServerParallelIntegralExtension(new Integral<>(Config.fn));                                                //частично мой говнокод (ненужный)
         initComponents();
         //fillComputations();
         
@@ -274,7 +275,7 @@ public class IntegralForm extends javax.swing.JFrame {
         
         double left, rigth, dx;
         
-        Vector<Object> row = selectedRow >= 0 ? ((DefaultTableModel) resultTable.getModel()).getDataVector().elementAt(selectedRow) : null;
+        final Vector<Object> row = selectedRow >= 0 ? ((DefaultTableModel) resultTable.getModel()).getDataVector().elementAt(selectedRow) : null;
         try{
         
             if(selectedRow != -1){
@@ -451,7 +452,11 @@ public class IntegralForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new IntegralForm().setVisible(true);
+                try { 
+                    new IntegralForm().setVisible(true);
+                } catch (Exception e) {
+                    
+                }
             }
         });
     }

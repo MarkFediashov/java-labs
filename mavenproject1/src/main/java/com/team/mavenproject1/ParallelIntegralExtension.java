@@ -6,6 +6,8 @@
 package com.team.mavenproject1;
 
 import com.team.mavenproject1.dto.IntegralComputationDto;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.SwingUtilities;
 
@@ -15,11 +17,11 @@ import javax.swing.SwingUtilities;
  */
 public class ParallelIntegralExtension<T extends Function> {
     
-    private final int threadAmount;
+    protected final int threadAmount;
     private final Integral<T> syncIntegral;
-    private Double sum = 0.0;
+    protected Double sum = 0.0;
     private Consumer<Double> whenComplete;
-    private IntegralComputationDto tempDto;
+    protected IntegralComputationDto tempDto;
     int parts;
     
     
@@ -32,7 +34,7 @@ public class ParallelIntegralExtension<T extends Function> {
         this.whenComplete = callback;
     }
     
-    public synchronized void addToIntegralSum(Double localSum) {
+    final public synchronized void addToIntegralSum(Double localSum) {
         sum += localSum;
         if(++parts == threadAmount){
             tempDto.setResult(sum);
@@ -45,18 +47,24 @@ public class ParallelIntegralExtension<T extends Function> {
     
     public Integral<T> getIntegral (){ return syncIntegral; }
     
-    private double partOf(double x, int i) { return (x / threadAmount) * i; } 
+    protected double partOf(double x, int i) { return (x / threadAmount) * i; } 
+    
+    protected List<IntegralComputationDto> splitForMulitpleActors (IntegralComputationDto dto){
+        List<IntegralComputationDto> list = new ArrayList<>(threadAmount);
+        double length = dto.getRigth() - dto.getLeft();
+        for(int i = 0; i < threadAmount; i++) {
+            list.add(new IntegralComputationDto(dto.getLeft() + partOf(length, i),dto.getLeft() + partOf(length, i + 1), dto.getDx(), 0.0));
+        }
+        return list;
+    }
     
     public void startCompute(IntegralComputationDto dto) {
-        Thread[] threads = new ThreadSummator[threadAmount];
-        double length = dto.getRigth() - dto.getLeft();
+       
         tempDto = dto;
-        for(int i = 0; i < threadAmount; i++){
-            threads[i] = new ThreadSummator(this, partOf(length, i), partOf(length, i + 1), dto.getDx());
-        }
         sum = 0.0;
-        for(int i = 0; i < threadAmount; i++){
-            threads[i].start();
+        
+        for(IntegralComputationDto part: splitForMulitpleActors(dto)){
+            new ThreadSummator(this,part.getLeft(), part.getRigth(), part.getDx()).start();
         }
         
     }

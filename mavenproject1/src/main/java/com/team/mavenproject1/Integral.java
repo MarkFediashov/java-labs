@@ -20,12 +20,20 @@ public class Integral<T extends Function> {
     }
     
     public double integrateInBounds(double left, double rigth, double dx){
+        double start = left;
         double sum = 0.0;
+        double currentRigth = Math.min(left + dx, rigth);
         
-        while(left < rigth){
+        while(true){
+            sum += ((function.compute(left) + function.compute(currentRigth)) * 0.5) * dx;
+            if(currentRigth >= rigth){
+                break;
+            }
             left += dx;
-            sum += function.compute(left)*dx;
+            currentRigth = Math.min(currentRigth + dx, rigth);
         }
+        
+        System.out.println(String.format("From %f to %f by %f = %f", start, rigth, dx, sum));
         
         return sum;
     }
