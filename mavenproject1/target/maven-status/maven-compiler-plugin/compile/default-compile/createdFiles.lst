@@ -10,6 +10,7 @@ com\team\mavenproject1\Function.class
 module-info.class
 com\team\mavenproject1\services\Serializator.class
 com\team\mavenproject1\IntegralForm$9.class
+com\team\mavenproject1\Address.class
 com\team\mavenproject1\SocketServerParallelIntegralExtension$ClientActor.class
 com\team\mavenproject1\IntegralForm$10.class
 com\team\mavenproject1\dto\IntegralComputationDto.class
