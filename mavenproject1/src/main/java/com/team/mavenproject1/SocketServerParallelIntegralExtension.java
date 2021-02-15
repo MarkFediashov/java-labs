@@ -6,11 +6,17 @@
 package com.team.mavenproject1;
 
 import com.team.mavenproject1.dto.IntegralComputationDto;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -22,22 +28,24 @@ import java.util.List;
  */
 public class SocketServerParallelIntegralExtension<T extends Function> extends ParallelIntegralExtension<T> {
     
-    private final List<Socket> peer = new LinkedList<>();
-    private final ServerSocket socket;
+    private final List<Address> peer = new LinkedList<>();
+    private final DatagramSocket socket;
     private static final int hostProcessCount = 1;
     private Boolean isReady = false;
     
     public SocketServerParallelIntegralExtension(Integral integral) throws IOException{
         super(integral, hostProcessCount);
-        socket = new ServerSocket(Config.port);
+        socket = new DatagramSocket(Config.port);
         (new Thread(this::waitForPeers)).start();
     }
     
     private synchronized void waitForPeers(){
         while(peer.size() != hostProcessCount){
             try{
-               Socket s = socket.accept();
-               peer.add(s);
+               byte[] buffer = new byte[512];
+               DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+               socket.receive(packet);
+               peer.add(new Address(packet.getAddress(), packet.getPort()));
             } catch (IOException exception) {
             }
         }
@@ -67,9 +75,9 @@ public class SocketServerParallelIntegralExtension<T extends Function> extends P
     
     private class ClientActor implements Runnable{
         final IntegralComputationDto dto;
-        final Socket client;
+        final Address client;
         
-        public ClientActor(IntegralComputationDto dto, Socket client){
+        public ClientActor(IntegralComputationDto dto, Address client){
             this.client = client;
             this.dto = dto;
         }
@@ -80,14 +88,29 @@ public class SocketServerParallelIntegralExtension<T extends Function> extends P
         }
     }
     
-    private void proxySum(Socket client, IntegralComputationDto dto){
+    private void proxySum(Address clientAddr, IntegralComputationDto dto){
         try{
-            ObjectOutputStream out = new ObjectOutputStream(client.getOutputStream());
-            
-            out.writeObject(dto);
-            ObjectInputStream in = new ObjectInputStream(client.getInputStream());
-            Double result = (Double) in.readObject();
-            addToIntegralSum(result);
+            synchronized (socket) {
+                final ByteArrayOutputStream arrOut = new ByteArrayOutputStream(6400);
+                byte[] buffer = new byte[128];
+                ObjectOutputStream out = new ObjectOutputStream(arrOut);
+
+                out.writeObject(dto);
+
+                final var bytes = arrOut.toByteArray();
+
+                DatagramPacket request = new DatagramPacket(bytes, bytes.length, clientAddr.getHost(), clientAddr.getPort());
+
+                socket.send(request);
+                
+                DatagramPacket response = new DatagramPacket(buffer, buffer.length);
+                
+                socket.receive(response);
+
+                ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(response.getData()));
+                Double result = (Double) in.readObject();
+                addToIntegralSum(result);
+            }
         } catch (Exception e) {
             
         } 
