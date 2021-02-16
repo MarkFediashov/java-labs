@@ -13,10 +13,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -30,7 +26,7 @@ public class SocketServerParallelIntegralExtension<T extends Function> extends P
     
     private final List<Address> peer = new LinkedList<>();
     private final DatagramSocket socket;
-    private static final int hostProcessCount = 1;
+    private static final int hostProcessCount = 2;
     private Boolean isReady = false;
     
     public SocketServerParallelIntegralExtension(Integral integral) throws IOException{
