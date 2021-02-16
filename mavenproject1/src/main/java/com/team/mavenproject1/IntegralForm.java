@@ -24,7 +24,7 @@ public class IntegralForm extends javax.swing.JFrame {
     final Integral<Function> integral;
     
     public IntegralForm() {
-        integral = new Integral<>((x)->x+2);                                                //частично мой говнокод (ненужный)
+        integral = new Integral<>((x)->1/x);                                                
         initComponents();
     }
 
@@ -195,7 +195,7 @@ public class IntegralForm extends javax.swing.JFrame {
             dx = (Double)row.get(2);
             
         } else {
-            left = Double.parseDouble(leftBoundField.getText());                         // мой говнокод
+            left = Double.parseDouble(leftBoundField.getText());                        
             rigth = Double.parseDouble(rigthBoundField.getText());
             dx = Double.parseDouble(stepField.getText());
         }
