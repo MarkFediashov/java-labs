@@ -25,7 +25,9 @@ public class Integral<T extends Function> {
         double currentRigth = Math.min(left + dx, rigth);
         
         while(true){
-            sum += ((function.compute(left) + function.compute(currentRigth)) * 0.5) * dx;
+            double tempSum = ((function.compute(left) + function.compute(currentRigth)) * 0.5) * dx;
+            sum += tempSum;
+            System.out.println(String.format("Temp %f to %f by %f = %f; total = %f", left, currentRigth, dx, tempSum, sum));
             if(currentRigth >= rigth){
                 break;
             }

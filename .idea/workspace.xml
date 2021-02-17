@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:master" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="8c6e298a-740f-4ac2-b8f8-6a0b7bb36a29" name="Default Changelist" comment="" />
+    <list id="b7e32680-8d57-4574-bfd4-145abea860d0" name="lab 3 + stage 3" comment="lab 3 + stage 3&#10;&#10;(cherry picked from commit f303dbb6e91b67473f19246ce917248f296b35e3)" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1oYqSU5MvCDbp2TnsTJxiDgjGKz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8c6e298a-740f-4ac2-b8f8-6a0b7bb36a29" name="Default Changelist" comment="" />
+      <created>1613473872105</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1613473872105</updated>
+    </task>
+    <task id="LOCAL-00001" summary="lab 3 + stage 3&#10;&#10;(cherry picked from commit f303dbb6e91b67473f19246ce917248f296b35e3)">
+      <created>1613474329064</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1613474329064</updated>
+    </task>
+    <task id="LOCAL-00002" summary="lab 5&#10;&#10;(cherry picked from commit 670e26e414904df81879d4cbe221ccbb12495764)">
+      <created>1613474629854</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1613474629854</updated>
+    </task>
+    <task id="LOCAL-00003" summary="lab6&#10;&#10;(cherry picked from commit 00f54b46a7df02d3f4f4cef1cb3dca28eb6a6c2d)">
+      <created>1613474753289</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1613474753289</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="lab 3 + stage 3&#10;&#10;(cherry picked from commit f303dbb6e91b67473f19246ce917248f296b35e3)" />
+    <MESSAGE value="lab 5&#10;&#10;(cherry picked from commit 670e26e414904df81879d4cbe221ccbb12495764)" />
+    <MESSAGE value="lab6&#10;&#10;(cherry picked from commit 00f54b46a7df02d3f4f4cef1cb3dca28eb6a6c2d)" />
+    <option name="LAST_COMMIT_MESSAGE" value="lab6&#10;&#10;(cherry picked from commit 00f54b46a7df02d3f4f4cef1cb3dca28eb6a6c2d)" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1217" y="257" key="CommitChangelistDialog2" timestamp="1613474752909">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1217" y="257" key="CommitChangelistDialog2/3440.273.1920.1040/0.0.3440.1400@0.0.3440.1400" timestamp="1613474752909" />
+    <state x="92" y="92" width="3256" height="1216" key="DiffContextDialog" timestamp="1613474284938">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="92" y="92" width="3256" height="1216" key="DiffContextDialog/3440.273.1920.1040/0.0.3440.1400@0.0.3440.1400" timestamp="1613474284938" />
+    <state x="159" y="122" key="MergeDialog" timestamp="1613474742264">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="159" y="122" key="MergeDialog/3440.273.1920.1040/0.0.3440.1400@0.0.3440.1400" timestamp="1613474742264" />
+    <state x="1005" y="461" width="1076" height="477" key="MultipleFileMergeDialog" timestamp="1613474742268">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1005" y="461" width="1076" height="477" key="MultipleFileMergeDialog/3440.273.1920.1040/0.0.3440.1400@0.0.3440.1400" timestamp="1613474742268" />
+    <state x="1312" y="420" key="Vcs.Push.Dialog.v2" timestamp="1613474755728">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1312" y="420" key="Vcs.Push.Dialog.v2/3440.273.1920.1040/0.0.3440.1400@0.0.3440.1400" timestamp="1613474755728" />
+  </component>
+</project>
